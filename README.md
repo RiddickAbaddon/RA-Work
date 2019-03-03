@@ -23,4 +23,3 @@
 7. Upload files to the server (without the database.sql file)
 8. Log in to your root account
 9. You can also translate all phrases (some are in the database) and edit graphic files
-# RA-Work
