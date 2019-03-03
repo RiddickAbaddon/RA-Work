@@ -1,0 +1,61 @@
+var form;
+var canSend = true;
+window.onload = function() {
+    form = $('#loginForm');
+    form.on("submit", processForm);
+}
+
+function processForm(e) {
+    if (e.preventDefault) e.preventDefault();
+    var action = form.attr('action');
+    var method = form.attr('method');
+    var login = $('input[name="login"]').val();
+    var password = $('input[name="password"]').val();
+    var messageObject = $('#message');
+    var button = $('#submit');
+
+    if(login != '' && password != '') {
+        
+        if(canSend) {
+            canSend = false;
+            button.addClass('disabled');
+            button.html('Logowanie...');
+            $.ajax({
+                url:        action,
+                method:     method,
+                dataType:   "json", 
+                data:       {
+                    login: login,
+                    password: password,
+                    code: code,
+                }
+            })
+            .done(function(response) {
+                if(response.success) {
+                    window.location.href = "/";
+                } else {
+                    messageObject.html(response.message);
+                    button.removeClass('disabled');
+                    button.html('Zaloguj<span>&raquo;</span>');
+                    canSend = true;
+                }
+            })
+            .fail(function( jqXHR, textStatus ) {
+                console.error("Połączenie nie powiodło się: " + textStatus);
+                
+                button.removeClass('disabled');
+                button.html('Zaloguj<span>&raquo;</span>');
+                canSend = true;
+            });
+        }
+        
+    } else {
+        messageObject.html("Podaj login i hasło");
+    }
+    
+
+    login = null;
+    password = null;
+
+    return false;
+}
